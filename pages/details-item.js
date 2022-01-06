@@ -1,93 +1,82 @@
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
-import web3 from 'web3'
+import web3 from "web3";
 import axios from "axios";
 import Web3Modal from "web3modal";
-import Image from 'next/image'
+import Image from "next/image";
 import { nftmarketaddress, nftaddress } from "../config";
 
 import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
+//import { loadGetInitialProps } from "next/dist/next-server/lib/utils";
+import { useRouter } from "next/router";
 
 export default function Home() {
   const [nfts, setNfts] = useState([]);
+  const [details, setDetails] = useState([]);
   const [loadingState, setLoadingState] = useState("not-loaded");
+  const router = useRouter();
   useEffect(() => {
-    loadNFTs();
+    loadNFTs(router.query);
   }, []);
-  async function loadNFTs() {
-    const web3Modal = new Web3Modal({
-      network: "mainnet",
-      cacheProvider: true,
-    })
-    
-    const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
-    const signer = provider.getSigner();
 
+  async function loadNFTs(tokenId) {
+    const provider = new ethers.providers.JsonRpcProvider(
+      "https://rpc.testnet.fantom.network/"
+    );
+    const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider);
     const marketContract = new ethers.Contract(
       nftmarketaddress,
       Market.abi,
-      signer
+      provider
     );
-    const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider);
-    const data = await marketContract.fetchMyNFTs();
+    console.log(tokenId.id);
+    const data = await marketContract.fetchMarketItem(Number(tokenId.id));
+    console.log(Number(data.price._hex));
+    const tokenUri = await tokenContract.tokenURI(Number(tokenId.id));
+    const meta = await axios.get(tokenUri);
 
-    const items = await Promise.all(
-      data.map(async (i) => {
-        const tokenUri = await tokenContract.tokenURI(i.tokenId);
-        const meta = await axios.get(tokenUri);
-        let price = ethers.utils.formatUnits(i.price.toString(), "ether");
-        let item = {
-          price,
-          tokenId: i.tokenId.toNumber(),
-          seller: i.seller,
-          owner: i.owner,
-          image: meta.data.image,
-        };
-        return item;
-      })
-    );
-    setNfts(items);
-    setLoadingState("loaded");
+    let price = Number((data.price._hex)/100000000);
+    let item = {
+      price,
+      tokenId: Number(tokenId.id),
+      name: meta.data.name,
+      descripcion: meta.data.description,
+      image: meta.data.image,
+    };
+    
+
+    setNfts(item);
+    const details = item;
+    setDetails(details);
+    console.log("details: ", details);
+    
   }
   //if (loadingState === 'loaded' && !nfts.length) return (<h1 className="py-10 px-20 text-3xl">No assets owned</h1>)
   return (
     <div className="flex justify-center">
       <div className="p-2">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
-         
-            <img src="../images/fibbotest.png" className="rounded" />
-            {
-            nfts.map((nft, i) => (
-              <div key={i} className="border p-4 shadow max-w-xs">
-                <img src={nft.image} className="rounded" width="300px" height="250px" />
-                <p className="text-2xl my-4 font-bold">Price paid: {nft.price}</p>
-              </div>
-            ))
-          }
-              
-            
-          
+          <img src={details.image} className="rounded" />
 
           <div className="p-4">
-            
-              <p className="font-bold text-purple">Fibbo Test</p>
-              <p className="p-4">Test</p>
-              <div className="border shadow rounded-xl overflow-hidden">
-                <div className="rounded" />
-                <div className="p-4">
-                  <p className="font-bold">Precio Actual</p>
-                  <p className="text-2xl font-bold">Price - 1 FTM</p>
-                  <button className="rounded bg-gradient-to-r from-blue-500 via-purple-500 py-2 px-6 text-white font-bold">
-                    Comprar ahora
-                  </button>                  
-                </div>
+            <p className="font-bold text-purple">{details.name}</p>
+            <p className="p-4">{details.descripcion}</p>
+            <div className="border shadow rounded-xl overflow-hidden">
+              <div className="rounded" />
+              <div className="p-4">
+                <p className="font-bold">Precio Actual</p>
+                <br></br>
+                <p className="text-2xl font-bold">{details.price} FTM</p>
+                <br></br>
+                <button className="rounded bg-gradient-to-r from-blue-500 via-purple-500 py-2 px-6 text-white font-bold">
+                  Comprar ahora
+                </button>
               </div>
             </div>
           </div>
         </div>
       </div>
-    
+    </div>
   );
 }

@@ -1,5 +1,6 @@
 import { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
+import { useRef } from 'react';
 import web3 from 'web3'
 import axios from 'axios'
 import Web3Modal from "web3modal"
@@ -65,6 +66,7 @@ export default function Home() {
     loadNFTs()
   }
   
+ 
   if (loaded === 'loaded' && !nfts.length) return (<h1 className="p-20 text-4xl">No NFTs!</h1>)
   return (
     <div className="flex justify-center">
@@ -73,13 +75,37 @@ export default function Home() {
           {
             nfts.map((nft, i) => (
               <div key={i} className="border p-4 shadow max-w-xs">
+                
                 <Image src={nft.image} className="rounded" width="300px" height="250px" />
                 <p className="text-2xl my-4 font-bold">Price: {nft.price} FIB</p>
+                <div className="p-4">
+                  <p style={{ height: '64px' }} className="text-2xl font-semibold">{nft.name}</p>
+                  <div style={{ height: '70px', overflow: 'hidden' }}>
+                    <p className="text-gray-400">{nft.description}</p>
+                  </div>
+                </div>
                 {/* <button className="bg-green-600 text-white py-2 px-12 rounded" onClick={() => buyNft(nft)}>Buy NFT</button> */}
-                <button className="bg-gradient-to-r from-blue-500 via-purple-500 text-white font-bold py-2 px-10 rounded" onClick={() => buyNft(nft)}>Comprar</button>
-                <Link href="/details-item">
-                <button className="bg-gradient-to-r from-blue-500 via-purple-500 text-white font-bold py-2 px-10 rounded">Detalle</button>                 
+                <button className="bg-gradient-to-r from-blue-500 via-purple-500 text-white font-bold py-2 px-6 mx-4 rounded" onClick={() => buyNft(nft)}>Comprar</button>
+                {/* <button href={`/item/[id]`} as={`/item/${nfts.tokenId}`} key={nft.tokenId}> */}
+               
+                {/* <Link href={`/item/[id]`} as={`/item/${nfts.tokenId}`} key={nft.tokenId}>
+                <button className="bg-gradient-to-r from-blue-500 via-purple-500 text-white font-bold py-2 px-10 rounded">Detalle</button>                  
+                <h3>{nft.tokenId}</h3>
+                <p>{nft.seller}</p>
+                </Link> */}
+                
+                <Link href={{
+                        pathname:'/details-item',
+                        query:{ id: nft.tokenId}
+                    }}
+                    >
+                    <button className="bg-gradient-to-r from-blue-500 via-purple-500 text-white font-bold py-2 px-6 mx-4 rounded">Detalle</button>                 
                 </Link>
+                {/* <Link href="/details-item"> 
+                  
+                 
+                <button className="bg-gradient-to-r from-blue-500 via-purple-500 text-white font-bold py-2 px-10 rounded">Detalle</button>                 
+                </Link> */}
               </div>
             ))
           }
