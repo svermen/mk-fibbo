@@ -79,8 +79,8 @@ export default function Home() {
                 <Image src={nft.image} className="rounded" width="300px" height="250px" />
                 <p className="text-2xl my-4 font-bold">Price: {nft.price} FIB</p>
                 <div className="p-4">
-                  <p style={{ height: '64px' }} className="text-2xl font-semibold">{nft.name}</p>
-                  <div style={{ height: '70px', overflow: 'hidden' }}>
+                  <p style={{ height: '1px' }} className="text-2xl font-semibold">{nft.name}</p>
+                  <div style={{ height: '2px', overflow: 'hidden' }}>
                     <p className="text-gray-400">{nft.description}</p>
                   </div>
                 </div>
