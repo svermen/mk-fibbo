@@ -56,6 +56,7 @@ export default function Home() {
   return (
     <div className="flex justify-center">
       <div className="p-2">
+      <p className="text-4xl font-bold text-purple">{details.name}</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
           <img src={details.image} className="rounded" />
 
