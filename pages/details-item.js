@@ -36,7 +36,7 @@ export default function Home() {
     const tokenUri = await tokenContract.tokenURI(Number(tokenId.id));
     const meta = await axios.get(tokenUri);
 
-    let price = Number((data.price._hex)/100000000);
+    let price = web3.utils.fromWei(data.price._hex.toString(), 'ether')
     let item = {
       price,
       tokenId: Number(tokenId.id),
@@ -61,7 +61,7 @@ export default function Home() {
           <img src={details.image} className="rounded" />
 
           <div className="p-4">
-            <p className="font-bold text-purple">{details.name}</p>
+          <p className="font-bold text-purple">{details.name}</p>
             <p className="p-4">{details.descripcion}</p>
             <div className="border shadow rounded-xl overflow-hidden">
               <div className="rounded" />

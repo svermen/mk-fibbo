@@ -37,6 +37,8 @@ export default function Home() {
         seller: i.seller,
         owner: i.owner,
         image: meta.data.image,
+        name: meta.data.name,
+        description: meta.data.description,
       }
       return item
     }))
@@ -70,20 +72,23 @@ export default function Home() {
   if (loaded === 'loaded' && !nfts.length) return (<h1 className="p-20 text-4xl">No NFTs!</h1>)
   return (
     <div className="flex justify-center">
-      <div style={{ width: 900 }}>
-        <div className="grid grid-cols-2 gap-4 pt-8">
+      <div className="px-4" style={{ maxWidth: '1600px' }}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
           {
             nfts.map((nft, i) => (
-              <div key={i} className="border p-4 shadow max-w-xs">
+              <div key={i} className="border shadow rounded-xl overflow-hidden">
                 
                 <Image src={nft.image} className="rounded" width="300px" height="250px" />
-                <p className="text-2xl my-4 font-bold">Price: {nft.price} FIB</p>
-                <div className="p-4">
-                  <p style={{ height: '1px' }} className="text-2xl font-semibold">{nft.name}</p>
+                <p style={{ height: '1px' }} className="text-2xl font-bold">{nft.name}</p>
+                <br></br>
+                <p className="text-2xl my-4 font-semibold">Price: {nft.price} FIB</p>
+                {/* <div className="p-4">
+                  
                   <div style={{ height: '2px', overflow: 'hidden' }}>
                     <p className="text-gray-400">{nft.description}</p>
                   </div>
-                </div>
+                </div> */}
+                
                 {/* <button className="bg-green-600 text-white py-2 px-12 rounded" onClick={() => buyNft(nft)}>Buy NFT</button> */}
                 <button className="bg-gradient-to-r from-blue-500 via-purple-500 text-white font-bold py-2 px-6 mx-4 rounded" onClick={() => buyNft(nft)}>Comprar</button>
                 {/* <button href={`/item/[id]`} as={`/item/${nfts.tokenId}`} key={nft.tokenId}> */}
