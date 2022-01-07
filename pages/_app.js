@@ -1,5 +1,7 @@
 import "../styles/globals.css";
 import Link from "next/link";
+import IconButton from '@material-ui/core/IconButton';
+import { ShoppingCart, AccountCircleRounded, AccountBalanceWallet } from '@material-ui/icons';
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -40,6 +42,16 @@ function MyApp({ Component, pageProps }) {
                     My NFTs
                   </a>
                 </li>
+              </Link>
+              <Link href="/">
+                <IconButton aria-label="show cart items" color="inherit">
+                  <AccountCircleRounded fontSize="large" />
+                </IconButton>
+              </Link>
+              <Link href="/">
+                <IconButton aria-label="show cart items" color="inherit">
+                  <AccountBalanceWallet fontSize="large" />
+                </IconButton>
               </Link>
             </ul>
           </div>
