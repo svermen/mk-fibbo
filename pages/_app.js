@@ -1,9 +1,19 @@
 import "../styles/globals.css";
 import Link from "next/link";
-import IconButton from '@material-ui/core/IconButton';
-import { ShoppingCart, AccountCircleRounded, AccountBalanceWallet } from '@material-ui/icons';
+import IconButton from "@material-ui/core/IconButton";
+import {useState} from 'react';
+import {
+  ShoppingCart,
+  AccountCircleRounded,
+  AccountBalanceWallet,
+} from "@material-ui/icons";
 
 function MyApp({ Component, pageProps }) {
+  const [search,setAge]=useState()
+    
+  const changeAge =()=>{
+    setAge(40)
+  }
   return (
     <div>
       <nav className="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded">
@@ -12,11 +22,13 @@ function MyApp({ Component, pageProps }) {
             <img
               className="m-2 w-20 sm:w-40 self-center"
               src="../images/Fibbo-azul.png"
+             
             />
           </a>
           <input
             placeholder="Buscar en Fibbo"
             className="mt-4 border rounded mr-10 p-4 px-28 "
+            value={search} onChange={(e)=>setAge(e.target.value)}
           />
           <div className="hidden w-full md:block md:w-auto">
             <ul className="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
@@ -31,7 +43,7 @@ function MyApp({ Component, pageProps }) {
               <Link href="/create-item">
                 <li>
                   <a className="block py-2 pl-3 pr-4 text-purple-500 text-2xl font-bold text-base border-b border-gray-100 hover:bg-gray-50 cursor-pointer md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0">
-                    Create NFT
+                    Create NFT 
                   </a>
                 </li>
               </Link>
@@ -57,7 +69,7 @@ function MyApp({ Component, pageProps }) {
           </div>
         </div>
       </nav>
-      <Component {...pageProps} />
+      <Component {...pageProps}  data={search} />
     </div>
   );
 }
