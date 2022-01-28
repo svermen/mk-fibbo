@@ -14,6 +14,10 @@ import Market from "../artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 
 export default function Home(props) {
   const [nfts, setNfts] = useState([]);
+  const unique = Array.from(new Set(nfts.map(a => a.name)))
+  .map(name => {
+   return nfts.find(a => a.name === name)
+  })
   const [loaded, setLoaded] = useState("not-loaded");
   useEffect(() => {
     loadNFTs();
@@ -90,7 +94,7 @@ export default function Home(props) {
     <div className="flex justify-center">
       <div className="px-4" style={{ maxWidth: "1600px" }}>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
-          { nfts.filter(nf => nf.name.includes(search)).map((nft, i) => (
+          { unique.filter(nf => nf.name.includes(search)).map((nft, i) => (
             <div key={i} className="border shadow rounded-xl overflow-hidden">
               <Image
                 src={nft.image}
